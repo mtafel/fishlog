@@ -1,7 +1,8 @@
 import re
 #from docutils.core import publish_parts
-from pyramid.view import view_config
+#from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
+from pyramid.security import authenticated_userid
 from pyramid.url import route_url
 
 from .models import (
@@ -12,6 +13,7 @@ from .models import (
 #@view_config(route_name='home', renderer='templates/mytemplate.pt')
 def view_fishlog(request):
     return HTTPFound(location = route_url('view_page',request,           pagename='FrontPage'))
+
 def view_page(request):
     pagename = request.matchdict['pagename']
     session = DBSession()
@@ -21,5 +23,6 @@ def view_page(request):
 
     #content = publish_parts(page.data, writer_name='html')['html_body']
     content = "Hello World"
-    return dict(page=page, content=content)
+    logged_in = authenticated_userid(request)
+    return dict(page=page, content=content, logged_in=logged_in)
 

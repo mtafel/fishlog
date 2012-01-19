@@ -11,6 +11,8 @@ from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
 
 from zope.sqlalchemy import ZopeTransactionExtension
+from pyramid.security import Allow
+from pyramid.security import Everyone
 
 DBSession = scoped_session(sessionmaker(
                              extension=ZopeTransactionExtension()))
@@ -40,11 +42,9 @@ def initialize_sql(engine):
     except IntegrityError:
         # already created
         transaction.abort()
-#from pyramid.security import Allow
-#from pyramid.security import Everyone
-
-#class RootFactory(object):
-#    __acl__ = [ (Allow, Everyone, 'view'),
-#                (Allow, 'group:editors', 'edit') ]
-#    def __init__(self, request):
-#        pass
+#
+class RootFactory(object):
+    __acl__ = [ (Allow, Everyone, 'view'),
+                (Allow, 'group:members', 'member') ]
+    def __init__(self, request):
+        pass
